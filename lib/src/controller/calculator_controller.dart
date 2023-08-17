@@ -1,11 +1,23 @@
 import 'package:get/get.dart';
 
 class CalculatorController extends GetxController {
-  var firstNum = 0.obs;
-  var secondNum = 0.obs;
+  int firstNum = 0;
+  int secondNum = 0;
   var result = 0.obs;
 
   void calSum() {
-    result.value = firstNum.value + secondNum.value;
+    setResult(firstNum + secondNum);
+  }
+
+  void setResult(int value) {
+    result(value);
+  }
+
+  void changeFirstNum(String firstNumber) {
+    firstNum = int.tryParse(firstNumber) ?? 0;
+  }
+
+  void changeSecondNum(String secondNumber) {
+    secondNum = int.tryParse(secondNumber) ?? 0;
   }
 }
