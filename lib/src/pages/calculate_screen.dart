@@ -1,72 +1,68 @@
+import 'package:add_app/src/components/calculate_box.dart';
 import 'package:add_app/src/controller/calculator_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class ClaculateScreen extends StatelessWidget {
-  const ClaculateScreen({super.key});
+class ClaculateScreen extends GetView<CalculatorController> {
+  ClaculateScreen({super.key});
+
+  TextEditingController textareaA = TextEditingController();
+  TextEditingController textareaB = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    CalculatorController calculatorController = Get.put(CalculatorController());
-    return Container(
+    return SizedBox(
       height: 300,
       child: Column(
         children: [
-          SizedBox(
-            height: 40,
-            child: TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: "첫번째 숫자를 입력해주세요",
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                onChanged: (value) => calculatorController.firstNum.value =
-                    int.tryParse(value) ?? 0),
+          CalculateBox(
+            changeNumFunction: controller.changeFirstNum,
+            textController: textareaA,
+            labelText: "첫번째 숫자를 입력해주세요",
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
-          SizedBox(
-            height: 40,
-            child: TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: "두번째 숫자를 입력해주세요",
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                onChanged: (value) => calculatorController.secondNum.value =
-                    int.tryParse(value) ?? 0),
-          ),
-          SizedBox(
+          CalculateBox(
+              changeNumFunction: controller.changeSecondNum,
+              textController: textareaB,
+              labelText: "두번째 숫자를 입력해주세요"),
+          const SizedBox(
             height: 30,
           ),
-          ElevatedButton(
-            child: Text("더하기"),
-            onPressed: () => calculatorController.calSum(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                child: const Text("더하기"),
+                onPressed: () => controller.calSum(),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              ElevatedButton(
+                child: const Icon(Icons.refresh),
+                onPressed: () {
+                  controller.setResult(0);
+                  textareaA.clear();
+                  textareaB.clear();
+                },
+              ),
+            ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
-          Obx(
-            () => Text(
-              "결과 ${calculatorController.result}",
-              style: TextStyle(
+          Obx(() {
+            print('rebuild : ${controller.firstNum}');
+            return Text(
+              "결과 ${controller.result}",
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
